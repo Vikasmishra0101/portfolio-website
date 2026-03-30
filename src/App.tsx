@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import emailjs from '@emailjs/browser';
+// ... other imports ...
 import { TypingEffect } from './components/TypingEffect';
 import { InteractiveChart } from './components/InteractiveChart';
 import { MiniInsightsDashboard } from './components/MiniInsightsDashboard';
@@ -72,6 +74,9 @@ const themes: Record<Theme, ThemeConfig> = {
 };
 
 function App() {
+  // ---> I ADDED THIS LINE RIGHT HERE:
+  const form = useRef<HTMLFormElement>(null);
+
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [theme, setTheme] = useState<Theme>('cyber');
@@ -104,7 +109,22 @@ function App() {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('sending');
-    setTimeout(() => setFormStatus('sent'), 1500);
+
+    emailjs.sendForm(
+      'service_jmg5epn',         
+      'template_vrnpyq5',       
+      form.current!, 
+      'YlbNH_K9pMmUACLlE' // <--- I ADDED THE MISSING ")" ON THIS LINE
+    )
+    .then(() => {
+        setFormStatus('sent');
+        form.current?.reset(); 
+        setTimeout(() => setFormStatus('idle'), 5000); 
+    }, (error) => {
+        console.log('FAILED...', error.text);
+        setFormStatus('idle');
+        alert("Oops! Something went wrong. Please try again.");
+    });
   };
 
   const skills = {
@@ -209,7 +229,7 @@ function App() {
             <button onClick={() => scrollToSection('contact')} className={`px-8 py-4 ${currentTheme.button} font-bold rounded-xl shadow-xl hover:scale-105 transition-all flex items-center gap-2`}>
               <Mail size={18} /> Get In Touch
             </button>
-            <a href="/Vikas_Mishra_Resume.pdf" download className="px-8 py-4 border-2 border-white/20 text-white font-bold rounded-xl hover:bg-white/10 transition-all flex items-center gap-2 backdrop-blur-sm">
+            <a href="/vikas_mishra_resume.pdf" download className="px-8 py-4 border-2 border-white/20 text-white font-bold rounded-xl hover:bg-white/10 transition-all flex items-center gap-2 backdrop-blur-sm">
               <BookOpen size={18} /> Download CV
             </a>
           </div>
@@ -388,7 +408,7 @@ function App() {
 
               <div className="flex gap-4">
                 <a href="https://github.com/Vikasmishra0101" target="_blank" rel="noreferrer" className={`p-4 rounded-xl border ${currentTheme.cardBorder} hover:bg-white/5 transition-colors`}><Github className={theme === 'cyber' ? 'text-white' : 'text-slate-900'} /></a>
-                <a href="https://linkedin.com/in/vikas-mishra01" target="_blank" rel="noreferrer" className={`p-4 rounded-xl border ${currentTheme.cardBorder} hover:bg-white/5 transition-colors`}><Linkedin className={theme === 'cyber' ? 'text-white' : 'text-slate-900'} /></a>
+                <a href="https://linkedin.com/in/git push -f origin mainvikas-mishra01" target="_blank" rel="noreferrer" className={`p-4 rounded-xl border ${currentTheme.cardBorder} hover:bg-white/5 transition-colors`}><Linkedin className={theme === 'cyber' ? 'text-white' : 'text-slate-900'} /></a>
               </div>
             </div>
 
@@ -402,16 +422,16 @@ function App() {
                   <p className="text-slate-500 text-lg">Thank you for reaching out. I'll get back to you within 24 hours.</p>
                 </div>
               ) : (
-                <form onSubmit={handleFormSubmit} className="space-y-8">
+                <form ref={form} onSubmit={handleFormSubmit} className="space-y-8">
                   <h3 className={`text-2xl font-black mb-6 ${theme === 'cyber' ? 'text-white' : 'text-slate-900'}`}>Send a Message</h3>
                   <div className="grid md:grid-cols-2 gap-8">
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-widest text-slate-500">Name</label>
-                      <input required type="text" className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="John Doe" />
+                      <input required type="text" className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="Write your name" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-widest text-slate-500">Email</label>
-                      <input required type="email" className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="john@example.com" />
+                      <input required type="email" className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="Name@example.com" />
                     </div>
                   </div>
                   <div className="space-y-2">
