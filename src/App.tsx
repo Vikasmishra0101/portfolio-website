@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import emailjs from '@emailjs/browser';
-// ... other imports ...
 import { TypingEffect } from './components/TypingEffect';
 import { InteractiveChart } from './components/InteractiveChart';
 import { MiniInsightsDashboard } from './components/MiniInsightsDashboard';
@@ -12,8 +11,8 @@ import {
 } from 'lucide-react';
 
 import profilePic from './profile.jpg';
-// import qrProjectImg from './qr-project.jpg';
-// import shopProjectImg from './ecommerce-project.jpg';
+import qrPic from './qr-app.jpg';
+import shopPic from './shop-app.jpg';
 
 type Theme = 'cyber' | 'sunset' | 'synth';
 
@@ -135,9 +134,10 @@ function App() {
     concepts: ['OOP', 'Data Analytics', 'Computer Networks']
   };
 
-  const projects = [
+const projects = [
     {
       title: 'QR Attendance Management System',
+      image: qrPic,
       period: 'Jul 2023 - Jun 2024',
       type: 'Full-Stack Application',
       challenge: 'Manual attendance was slow and prone to proxy entries, lacking real-time verification.',
@@ -149,6 +149,7 @@ function App() {
     },
     {
       title: 'E-Commerce Platform',
+      image: shopPic,
       period: 'Jul 2024 - Sep 2024',
       type: 'Frontend & UI/UX',
       challenge: 'Need for a modern, responsive e-commerce interface with fast cross-device load times.',
@@ -159,7 +160,6 @@ function App() {
       impact: [{ label: 'Mobile Score', value: 95 }, { label: 'Page Speed', value: 92 }]
     }
   ];
-
   const experience = [
     {
       category: 'Education',
@@ -323,11 +323,20 @@ function App() {
           <div className="space-y-12">
             {projects.map((p, i) => (
               <div key={i} className={`group rounded-3xl overflow-hidden border ${currentTheme.cardBorder} ${theme === 'cyber' ? 'bg-slate-900' : 'bg-white shadow-xl'} grid lg:grid-cols-12 gap-0`}>
-                <div className="lg:col-span-5 bg-slate-800 relative overflow-hidden min-h-[300px]">
-                  {/* Replace this div with your actual image once imported */}
-                  <div className={`absolute inset-0 flex items-center justify-center opacity-30 bg-gradient-to-br ${currentTheme.heroGradient} group-hover:scale-105 transition-transform duration-700`}>
-                    <Code size={100} />
-                  </div>
+  <div className="lg:col-span-5 bg-slate-800 relative overflow-hidden min-h-[300px]">
+    {/* Replace this div with your actual image once imported */}
+    {p.image ? (
+     <img 
+  src={p.image} 
+  alt={p.title} 
+  // Change object-contain to object-cover and add object-center
+  className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" 
+/>
+    ) : (
+      <div className={`absolute inset-0 flex items-center justify-center opacity-30 bg-gradient-to-br ${currentTheme.heroGradient} group-hover:scale-105 transition-transform duration-700`}>
+        <Code size={100} />
+      </div>
+                  )}
                 </div>
                 <div className="lg:col-span-7 p-10 flex flex-col justify-center">
                   <div className="flex items-center gap-3 mb-4">
@@ -408,7 +417,7 @@ function App() {
 
               <div className="flex gap-4">
                 <a href="https://github.com/Vikasmishra0101" target="_blank" rel="noreferrer" className={`p-4 rounded-xl border ${currentTheme.cardBorder} hover:bg-white/5 transition-colors`}><Github className={theme === 'cyber' ? 'text-white' : 'text-slate-900'} /></a>
-                <a href="https://linkedin.com/in/git push -f origin mainvikas-mishra01" target="_blank" rel="noreferrer" className={`p-4 rounded-xl border ${currentTheme.cardBorder} hover:bg-white/5 transition-colors`}><Linkedin className={theme === 'cyber' ? 'text-white' : 'text-slate-900'} /></a>
+                <a href="https://linkedin.com/in/vikas-mishra01" target="_blank" rel="noreferrer" className={`p-4 rounded-xl border ${currentTheme.cardBorder} hover:bg-white/5 transition-colors`}><Linkedin className={theme === 'cyber' ? 'text-white' : 'text-slate-900'} /></a>
               </div>
             </div>
 
@@ -422,21 +431,22 @@ function App() {
                   <p className="text-slate-500 text-lg">Thank you for reaching out. I'll get back to you within 24 hours.</p>
                 </div>
               ) : (
-                <form ref={form} onSubmit={handleFormSubmit} className="space-y-8">
+               <form ref={form} onSubmit={handleFormSubmit} className="space-y-8">
                   <h3 className={`text-2xl font-black mb-6 ${theme === 'cyber' ? 'text-white' : 'text-slate-900'}`}>Send a Message</h3>
                   <div className="grid md:grid-cols-2 gap-8">
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-widest text-slate-500">Name</label>
-                      <input required type="text" className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="Write your name" />
+                      <input required name="from_name" type="text" className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="Write your name" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-widest text-slate-500">Email</label>
-                      <input required type="email" className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="Name@example.com" />
+                      {/* Change name="user_email" to name="reply_to" */}
+<input required name="reply_to" type="email" className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="name@example.com" />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-widest text-slate-500">Message</label>
-                    <textarea required rows={4} className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors resize-none ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="How can we collaborate?"></textarea>
+                    <textarea required name="message" rows={4} className={`w-full bg-transparent border-b-2 p-3 outline-none transition-colors resize-none ${theme === 'cyber' ? 'border-slate-700 text-white focus:border-cyan-400' : 'border-slate-300 text-slate-900 focus:border-blue-600'}`} placeholder="How can we collaborate?"></textarea>
                   </div>
                   <button type="submit" className={`w-full py-5 ${currentTheme.button} font-black tracking-wide rounded-xl flex items-center justify-center gap-3 group transition-all mt-4`}>
                     {formStatus === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
